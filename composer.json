@@ -1,0 +1,22 @@
+{
+    "name": "hexlet/code",
+    "description": "Second php project for Hexlet",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }  
+    },
+    "bin": [
+        "bin/gendiff.php"
+    ],
+    "authors": [
+        {
+            "name": "SellY0urSoul",
+            "email": "valentintihonov9@gmail.com"
+        }
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    }
+}
