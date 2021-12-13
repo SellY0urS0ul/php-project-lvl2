@@ -16,10 +16,12 @@ Generate diff
 Usage:
   ./bin/gendiff.php (-h | --help)
   ./bin/gendiff.php (-v | --version)
+  ./bin/gendiff.php [--format <fmt>] <firstFile> <secondFile>
 
 Options:
   -h --help     Show this screen.
-  -v --version     Show version.
+  -v --version      Show version.
+  --format <fmt>      Report format [default: stylish]
 DOC;
 
 $args = Docopt::handle($doc, array('version'=>'Gendiff 1.0'));

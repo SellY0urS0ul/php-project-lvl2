@@ -1,15 +1,15 @@
 {
     "name": "hexlet/code",
-    "description": "Second php project for Hexlet",
+    "description": "Second Hexlet project",
     "license": "proprietary",
-    "autoload": {
-        "psr-4": {
-            "Hexlet\\Code\\": "src/"
-        }  
-    },
     "bin": [
         "bin/gendiff.php"
     ],
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
     "authors": [
         {
             "name": "SellY0urSoul",
