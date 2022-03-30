@@ -6,7 +6,7 @@ use function Php\Project\Lvl2\Parser\parse;
 use function Php\Project\Lvl2\Render\Formatters\render;
 
 // Функция, генерирующая форматированное отличие 2-х файлов
-function genDiff(string $firstPath, string $secondPath, string $format = "stylish"): string
+function genDiff(string $firstPath, string $secondPath, string $format = 'stylish'): string
 {
     $firstFileContent = parse($firstPath);
     $secondFileContent = parse($secondPath);
@@ -29,10 +29,9 @@ function findDiff(array $firstFile, array $secondFile): array
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
                 $acc[] = generateNode($key, "Old", 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
             }
-            
             //Ключ -  файл
             if (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
-                if ($firstFile[$key] == $secondFile[$key]) {
+                if ($firstFile[$key] === $secondFile[$key]) {
                     $acc[] = generateNode($key, "Old", 'Unchanged', $firstFile[$key]);
                 } else {
                     $acc[] = generateNode($key, "Old", 'Changed', $firstFile[$key]);
