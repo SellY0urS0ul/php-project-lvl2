@@ -13,30 +13,34 @@ function stylishFormatter(array $diff)
 
 function makeStylishFormat(array $diff, int $depth = 1)
 {
-    $formatedDiff = array_reduce($diff, function ($acc, $element) use ($depth) {
+    $formatedDiff = array_map(function ($element) use ($depth) {
 
-        //Получение информации об узле
-        $key = array_key_first($element);
-        $value = $element[$key]["value"];
-        $action = normalizeAction($element[$key]["action"]);
-        $children = $element[$key]["children"];
+        if (!array_key_exists("Changed", $element)) {
+            //Получение информации об узле
+            $key = array_key_first($element);
+            $value = $element[$key]["value"];
+            $action = normalizeAction($element[$key]["action"]);
+            $children = $element[$key]["children"];
 
-        //Рассчет отступов в зависимости от глубины узла
-        $currentTab = str_repeat(' ', ($depth * TAB - SYMBOLS_SPACE));
+            //Рассчет отступов в зависимости от глубины узла
+            $currentTab = str_repeat(' ', ($depth * TAB - SYMBOLS_SPACE));
 
-        //Рекурсивная обработка директорий
-        $temp = '';
-        if ($children !== []) {
-            $temp = makeStylishFormat($children, $depth + 1);
-            $temp = "{\n{$temp}{$currentTab}  }";
+            //Рекурсивная обработка директорий
+            $temp = '';
+            if ($children !== []) {
+                $temp = makeStylishFormat($children, $depth + 1);
+                $temp = "{\n{$temp}{$currentTab}  }";
+            }
+
+            //Формирование финальной строки
+            return "{$currentTab}{$action} {$key}: {$value}{$temp}\n";
+        } else {
+            $temp2 = makeStylishFormat($element, $depth);
+            return $temp2;
         }
-
-        //Формирование финальной строки
-        $acc = $acc . "{$currentTab}{$action} {$key}: {$value}{$temp}\n";
-
-        return $acc;
-    });
-    return $formatedDiff;
+    }, $diff);
+    return implode($formatedDiff);
+    var_dump($formatedDiff);
 }
 
 function normalizeAction($action)

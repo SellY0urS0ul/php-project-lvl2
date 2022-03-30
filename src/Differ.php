@@ -22,35 +22,38 @@ function findDiff(array $firstFile, array $secondFile): array
     sort($uniqueKeys);
     //Рекурсивное построение дерева отличий в 2-х файлах
     $acc = [];
-    $difference = array_reduce($uniqueKeys, function ($acc, $key) use ($firstFile, $secondFile) {
+    $difference = array_map(function ($key) use ($firstFile, $secondFile) {
 
         //Ключ присутствует в обоих файлах
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                $acc[] = generateNode($key, "Old", 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
+                return generateNode($key, 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
             }
             //Ключ -  файл
             if (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 if ($firstFile[$key] === $secondFile[$key]) {
-                    $acc[] = generateNode($key, "Old", 'Unchanged', $firstFile[$key]);
+                    return generateNode($key, 'Unchanged', $firstFile[$key]);
                 } else {
-                    $acc[] = generateNode($key, "Old", 'Changed', $firstFile[$key]);
-                    $acc[] = generateNode($key, "Old", 'Added', $secondFile[$key]);
+                    $changedItem = generateNode($key, 'Changed', $firstFile[$key]);
+                    $addedItem = generateNode($key, 'Added', $secondFile[$key]);
+                    return ["Changed" => $changedItem, "Added" => $addedItem];
                 }
             }
 
 
             //Первый ключ - директория, второй - файл
             if (is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
-                $acc[] = generateNode($key, "Old", 'Changed', '', normalizeNode($firstFile[$key]));
-                $acc[] = generateNode($key, "Old", 'Added', $secondFile[$key]);
+                $changedItem =  generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
+                $addedItem = generateNode($key, 'Added', $secondFile[$key]);
+                return ["Changed" => $changedItem, "Added" => $addedItem];
             }
 
             //Первый ключ - файл, второй - директория
             if (!is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                $acc[] = generateNode($key, "Old", 'Added', '', normalizeNode($secondFile[$key]));
-                $acc[] = generateNode($key, "Old", 'Changed', $firstFile[$key]);
+                $changedItem =  generateNode($key, 'Changed', $firstFile[$key]);
+                $addedItem = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
+                return ["Changed" => $changedItem, "Added" => $addedItem];
             }
         }
 
@@ -58,11 +61,11 @@ function findDiff(array $firstFile, array $secondFile): array
         if (array_key_exists($key, $firstFile) && !array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key])) {
-                $acc[] = generateNode($key, "New", 'Changed', '', normalizeNode($firstFile[$key]));
+                return generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
             }
             //Ключ -  файл
             if (!is_array($firstFile[$key])) {
-                $acc[] = generateNode($key, "New", 'Changed', $firstFile[$key]);
+                return generateNode($key, 'Changed', $firstFile[$key]);
             }
         }
 
@@ -70,22 +73,21 @@ function findDiff(array $firstFile, array $secondFile): array
         if (array_key_exists($key, $secondFile) && !array_key_exists($key, $firstFile)) {
             //Ключ - директория
             if (is_array($secondFile[$key])) {
-                $acc[] = generateNode($key, "New", 'Added', '', normalizeNode($secondFile[$key]));
+                return generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
             }
             //Ключ -  файл
             if (!is_array($secondFile[$key])) {
-                $acc[] = generateNode($key, "New", 'Added', $secondFile[$key]);
+                return generateNode($key, 'Added', $secondFile[$key]);
             }
         }
-        return $acc;
-    }, $acc);
+    }, $uniqueKeys);
     return $difference;
 }
 
 //Функция, генерирующая узел в дереве изменений
-function generateNode($key, $type, $action, $value, $children = [])
+function generateNode($key, $action, $value, $children = [])
 {
-    $nodeContent = ["type" => $type, "action" => $action, "value" => normalizeValue($value), "children" => $children];
+    $nodeContent = ["action" => $action, "value" => normalizeValue($value), "children" => $children];
     $node = [$key => $nodeContent];
     return $node;
 }
@@ -96,12 +98,11 @@ function normalizeNode($node)
     $nodeKeys = array_keys($node);
     sort($nodeKeys);
     $normalizedNode = array_map(function ($nodeKey) use ($node) {
-        $type = 'Old';
         $action = 'Unchanged';
         $value = (!is_array($node[$nodeKey])) ? normalizeValue($node[$nodeKey]) : '';
         $key = $nodeKey;
         $children = (!is_array($node[$nodeKey])) ? [] : normalizeNode($node[$nodeKey]);
-        $nodeContent = ["type" => $type, "action" => $action, "value" => $value, "children" => $children];
+        $nodeContent = ["action" => $action, "value" => $value, "children" => $children];
         $node = [$key => $nodeContent];
         return $node;
     }, $nodeKeys);

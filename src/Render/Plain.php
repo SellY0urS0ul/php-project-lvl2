@@ -10,39 +10,41 @@ function plainFormatter(array $diff)
 
 function makePlainFormat(array $diff, $path = '')
 {
-    $formatedDiff = array_reduce($diff, function ($acc, $element) use ($path, $diff) {
+    $formatedDiff = array_map(function ($element) use ($path, $diff) {
+        if (!array_key_exists("Changed", $element)) {
+            //Получение информации об узле
+            $key = array_key_first($element);
+            $children = $element[$key]["children"];
+            $value = ($children === []) ? valueFormatter($element[$key]["value"]) : '[complex value]';
+            $action = $element[$key]["action"];
 
-        //Получение информации об узле
-        $key = array_key_first($element);
-        $children = $element[$key]["children"];
-        $value = ($children === []) ? valueFormatter($element[$key]["value"]) : '[complex value]';
-        $type = $element[$key]["type"];
-        $action = $element[$key]["action"];
 
-        //Добавление нового элемента
-        if ($type === "New" && $action === "Added") {
-            $acc = $acc . "Property '{$path}{$key}' was added with value: {$value}\n";
+            //Добавление нового элемента
+            if ($action === "Added") {
+                return "Property '{$path}{$key}' was added with value: {$value}\n";
+            }
+
+            //Удаление элемента
+            if ($action === "Changed") {
+                return "Property '{$path}{$key}' was removed\n";
+            }
+
+            //Рекурсивная обработка директорий
+            if ($children !== []) {
+                $path = "{$path}{$key}.";
+                return makePlainFormat($children, $path);
+            }
+        } else {
+            //Обновление существующего элемента
+            $key = array_key_first($element['Changed']);
+            $oldChildren = $element['Changed'][$key]['children'];
+            $newChildren = $element['Added'][$key]['children'];
+            $newValue = ($newChildren === []) ? valueFormatter($element['Added'][$key]['value']) : '[complex value]';
+            $oldValue = ($oldChildren === []) ? valueFormatter($element['Changed'][$key]['value']) : '[complex value]';
+            return "Property '{$path}{$key}' was updated. From {$oldValue} to {$newValue}\n";
         }
-
-        //Удаление элемента
-        if ($type === "New" && $action === "Changed") {
-            $acc = $acc . "Property '{$path}{$key}' was removed\n";
-        }
-
-        //Обновление существующего элемента
-        if ($type === "Old" && $action === "Changed") {
-            $newValue = findNewValue($diff, $key);
-            $acc = $acc . "Property '{$path}{$key}' was updated. From {$value} to {$newValue}\n";
-        }
-
-        //Рекурсивная обработка директорий
-        if ($children !== []) {
-            $path = "{$path}{$key}.";
-            $acc = $acc . makePlainFormat($children, $path);
-        }
-        return $acc;
-    });
-    return $formatedDiff;
+    }, $diff);
+    return implode($formatedDiff);
 }
 
 function valueFormatter($value)
@@ -51,16 +53,4 @@ function valueFormatter($value)
         $value = "'{$value}'";
     }
     return $value;
-}
-
-function findNewValue($diff, $key)
-{
-    return array_reduce($diff, function ($carry, $element) use ($key) {
-        $newKey = array_key_first($element);
-        if ($newKey === $key && $element[$newKey]['action'] === 'Added') {
-            $newValue = valueFormatter($element[$newKey]['value']);
-            $carry = ($element[$newKey]['children'] !== []) ? '[complex value]' : $newValue;
-        }
-        return $carry;
-    });
 }
