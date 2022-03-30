@@ -2,7 +2,14 @@
 
 namespace Php\Project\Lvl2\Render\Plain;
 
-function plainFormatter(array $diff, $path = '')
+function plainFormatter(array $diff)
+{
+    $formattedString = makePlainFormat($diff);
+    $length = strlen($formattedString);
+    return substr($formattedString, 0, $length);
+}
+
+function makePlainFormat(array $diff, $path = '')
 {
     $formatedDiff = array_reduce($diff, function ($acc, $element) use ($path, $diff) {
 
@@ -39,7 +46,7 @@ function plainFormatter(array $diff, $path = '')
         //Рекурсивная обработка директорий
         if ($children !== []) {
             $path = "{$path}{$key}.";
-            $acc = $acc . plainFormatter($children, $path);
+            $acc = $acc . makePlainFormat($children, $path);
         }
         return $acc;
     });
@@ -48,7 +55,7 @@ function plainFormatter(array $diff, $path = '')
 
 function valueFormatter($value)
 {
-    if ($value !== 'false' && $value !== 'true' && $value !== 'null') {
+    if ($value !== 'false' && $value !== 'true' && $value !== 'null' && !is_numeric($value)) {
         $value = "'{$value}'";
     }
     return $value;
