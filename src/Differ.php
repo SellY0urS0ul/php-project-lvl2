@@ -24,20 +24,21 @@ function findDiff(array $firstFile, array $secondFile): array
     $acc = [];
     $difference = array_map(function ($key) use ($firstFile, $secondFile) {
 
+        $node = [];
         //Ключ присутствует в обоих файлах
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                return generateNode($key, 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
+                $node = generateNode($key, 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
             }
             //Ключ -  файл
             if (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 if ($firstFile[$key] === $secondFile[$key]) {
-                    return generateNode($key, 'Unchanged', $firstFile[$key]);
+                    $node = generateNode($key, 'Unchanged', $firstFile[$key]);
                 } else {
                     $changedItem = generateNode($key, 'Changed', $firstFile[$key]);
                     $addedItem = generateNode($key, 'Added', $secondFile[$key]);
-                    return ["Changed" => $changedItem, "Added" => $addedItem];
+                    $node = ["Changed" => $changedItem, "Added" => $addedItem];
                 }
             }
 
@@ -46,14 +47,14 @@ function findDiff(array $firstFile, array $secondFile): array
             if (is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 $changedItem =  generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
                 $addedItem = generateNode($key, 'Added', $secondFile[$key]);
-                return ["Changed" => $changedItem, "Added" => $addedItem];
+                $node = ["Changed" => $changedItem, "Added" => $addedItem];
             }
 
             //Первый ключ - файл, второй - директория
             if (!is_array($firstFile[$key]) && is_array($secondFile[$key])) {
                 $changedItem =  generateNode($key, 'Changed', $firstFile[$key]);
                 $addedItem = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
-                return ["Changed" => $changedItem, "Added" => $addedItem];
+                $node = ["Changed" => $changedItem, "Added" => $addedItem];
             }
         }
 
@@ -61,11 +62,11 @@ function findDiff(array $firstFile, array $secondFile): array
         if (array_key_exists($key, $firstFile) && !array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key])) {
-                return generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
+                $node = generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
             }
             //Ключ -  файл
             if (!is_array($firstFile[$key])) {
-                return generateNode($key, 'Changed', $firstFile[$key]);
+                $node = generateNode($key, 'Changed', $firstFile[$key]);
             }
         }
 
@@ -73,19 +74,20 @@ function findDiff(array $firstFile, array $secondFile): array
         if (array_key_exists($key, $secondFile) && !array_key_exists($key, $firstFile)) {
             //Ключ - директория
             if (is_array($secondFile[$key])) {
-                return generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
+                $node = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
             }
             //Ключ -  файл
             if (!is_array($secondFile[$key])) {
-                return generateNode($key, 'Added', $secondFile[$key]);
+                $node = generateNode($key, 'Added', $secondFile[$key]);
             }
         }
+        return $node;
     }, $uniqueKeys);
     return $difference;
 }
 
 //Функция, генерирующая узел в дереве изменений
-function generateNode($key, $action, $value, $children = [])
+function generateNode(string $key, string $action, $value, array $children = [])
 {
     $nodeContent = ["action" => $action, "value" => normalizeValue($value), "children" => $children];
     $node = [$key => $nodeContent];
