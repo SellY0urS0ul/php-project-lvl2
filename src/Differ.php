@@ -21,14 +21,14 @@ function findDiff(array $firstFile, array $secondFile): array
     $uniqueKeys = array_unique(array_merge(array_keys($firstFile), array_keys($secondFile)));
     sort($uniqueKeys);
     //Рекурсивное построение дерева отличий в 2-х файлах
+    $acc = [];
     $difference = array_reduce($uniqueKeys, function ($acc, $key) use ($firstFile, $secondFile) {
 
         //Ключ присутствует в обоих файлах
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                $low = generateNode($key, "Old", 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
-                $acc[] = $low;
+                $acc[] = generateNode($key, "Old", 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
             }
             //Ключ -  файл
             if (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
@@ -78,7 +78,7 @@ function findDiff(array $firstFile, array $secondFile): array
             }
         }
         return $acc;
-    });
+    }, $acc);
     return $difference;
 }
 
