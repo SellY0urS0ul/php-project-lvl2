@@ -2,13 +2,20 @@
     "name": "hexlet/code",
     "description": "Second Hexlet project",
     "license": "proprietary",
+    "type": "project",
+    "version": "1.0.0",
     "bin": [
-        "bin/gendiff.php"
+        "bin/gendiff"
     ],
     "autoload": {
         "psr-4": {
             "Hexlet\\Code\\": "src/"
-        }
+        },
+    "files": [
+        "src/Differ.php",
+        "src/Parser.php",
+        "src/Render/Render.php"
+    ]
     },
     "authors": [
         {
@@ -19,5 +26,8 @@
     "require": {
         "docopt/docopt": "^1.0",
         "symfony/yaml": "^5.4"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "*"
     }
 }
