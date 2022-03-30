@@ -27,7 +27,7 @@
         }
     ],
     "scripts": {
-        "test": "phpunit --coverage-html tests tests"
+        "test": "phpunit tests"
     },
     "require": {
         "docopt/docopt": "^1.0",

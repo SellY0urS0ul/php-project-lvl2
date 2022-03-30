@@ -3,7 +3,7 @@
 <?php
 
 // Вызовы функций из других неймспейсов
-use function Php\Project\Lvl2\Differ\genDiff;
+use function Differ\Differ\genDiff;
 
 // Автозагрузка всех зависимостей
 
