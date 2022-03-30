@@ -27,7 +27,8 @@ function findDiff(array $firstFile, array $secondFile): array
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                $acc[] = generateNode($key, "Old", 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
+                $low = generateNode($key, "Old", 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
+                $acc[] = $low;
             }
             //Ключ -  файл
             if (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
@@ -95,14 +96,14 @@ function normalizeNode($node)
     $nodeKeys = array_keys($node);
     sort($nodeKeys);
     $normalizedNode = array_map(function ($nodeKey) use ($node) {
-            $type = 'Old';
-            $action = 'Unchanged';
-            $value = (!is_array($node[$nodeKey])) ? normalizeValue($node[$nodeKey]) : '';
-            $key = $nodeKey;
-            $children = (!is_array($node[$nodeKey])) ? [] : normalizeNode($node[$nodeKey]);
-            $nodeContent = ["type" => $type, "action" => $action, "value" => $value, "children" => $children];
-            $node = [$key => $nodeContent];
-            return $node;
+        $type = 'Old';
+        $action = 'Unchanged';
+        $value = (!is_array($node[$nodeKey])) ? normalizeValue($node[$nodeKey]) : '';
+        $key = $nodeKey;
+        $children = (!is_array($node[$nodeKey])) ? [] : normalizeNode($node[$nodeKey]);
+        $nodeContent = ["type" => $type, "action" => $action, "value" => $value, "children" => $children];
+        $node = [$key => $nodeContent];
+        return $node;
     }, $nodeKeys);
     return $normalizedNode;
 }
