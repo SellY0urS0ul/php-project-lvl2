@@ -3,70 +3,130 @@
 namespace Php\Project\Lvl2\Differ;
 
 use function Php\Project\Lvl2\Parser\parse;
-use function Php\Project\Lvl2\Render\Render\render;
+use function Php\Project\Lvl2\Render\Formatters\render;
 
-// Общий обработчик, объединяющий работу функций
-function genDiff($firstPath, $secondPath, $format = "stylish")
+// Функция, генерирующая форматированное отличие 2-х файлов
+function genDiff(string $firstPath, string $secondPath, string $format = "stylish"): string
 {
-    $firstFile = parse($firstPath);
-    $secondFile = parse($secondPath);
-    $diff = findDiff($firstFile, $secondFile);
+    $firstFileContent = parse($firstPath);
+    $secondFileContent = parse($secondPath);
+    $diff = findDiff($firstFileContent, $secondFileContent);
     return render($diff, $format);
 }
 
-// Функция, производящая поиск отличий между 2-я файлами
-function findDiff(array $firstFile, array $secondFile)
+// Функция, осуществляющая поиск отличий между 2-я файлами
+function findDiff(array $firstFile, array $secondFile): array
 {
     //Список уникальных ключей одного уровня
     $uniqueKeys = array_unique(array_merge(array_keys($firstFile), array_keys($secondFile)));
+    sort($uniqueKeys);
+    //Рекурсивное построение дерева отличий в 2-х файлах
     $difference = array_reduce($uniqueKeys, function ($acc, $key) use ($firstFile, $secondFile) {
+
         //Ключ присутствует в обоих файлах
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
-            //Директории
+            //Ключ - директория
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                $acc[] = generateNode($firstFile[$key], $key, 'array', findDiff($firstFile[$key], $secondFile[$key]));
+                $acc[] = generateNode($key, "Old", 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
                 return $acc;
             }
-            //Файлы
-            if (!is_array($firstFile[$key]) & !is_array($secondFile[$key])) {
+            
+            //Ключ -  файл
+            if (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 if ($firstFile[$key] == $secondFile[$key]) {
-                    $acc[] = generateNode($firstFile[$key], $key, ' ');
+                    $acc[] = generateNode($key, "Old", 'Unchanged', $firstFile[$key]);
                     return $acc;
                 } else {
-                    $acc[] = generateNode($firstFile[$key], $key, '-');
-                    $acc[] = generateNode($secondFile[$key], $key, '+');
+                    $acc[] = generateNode($key, "Old", 'Changed', $firstFile[$key]);
+                    $acc[] = generateNode($key, "Old", 'Added', $secondFile[$key]);
                     return $acc;
                 }
+            }
+
+
+            //Первый ключ - директория, второй - файл
+            if (is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
+                $acc[] = generateNode($key, "Old", 'Changed', '', normalizeNode($firstFile[$key]));
+                $acc[] = generateNode($key, "Old", 'Added', $secondFile[$key]);
+                return $acc;
+            }
+
+            //Первый ключ - файл, второй - директория
+            if (!is_array($firstFile[$key]) && is_array($secondFile[$key])) {
+                $acc[] = generateNode($key, "Old", 'Added', '', normalizeNode($secondFile[$key]));
+                $acc[] = generateNode($key, "Old", 'Changed', $firstFile[$key]);
+                return $acc;
             }
         }
 
         //Ключ присутствует только в 1-м файле
-        if (array_key_exists($key, $firstFile)) {
-            //Директории
-            //Файлы
+        if (array_key_exists($key, $firstFile) && !array_key_exists($key, $secondFile)) {
+            //Ключ - директория
+            if (is_array($firstFile[$key])) {
+                $acc[] = generateNode($key, "New", 'Changed', '', normalizeNode($firstFile[$key]));
+                return $acc;
+            }
+            //Ключ -  файл
             if (!is_array($firstFile[$key])) {
-                $acc[] = generateNode($firstFile[$key], $key, '-');
+                $acc[] = generateNode($key, "New", 'Changed', $firstFile[$key]);
                 return $acc;
             }
         }
 
         //Ключ присутствует только во 2-м файле
-        if (array_key_exists($key, $secondFile)) {
-            //Директории
-            //Файлы
+        if (array_key_exists($key, $secondFile) && !array_key_exists($key, $firstFile)) {
+            //Ключ - директория
+            if (is_array($secondFile[$key])) {
+                $acc[] = generateNode($key, "New", 'Added', '', normalizeNode($secondFile[$key]));
+                return $acc;
+            }
+            //Ключ -  файл
             if (!is_array($secondFile[$key])) {
-                $acc[] = generateNode($secondFile[$key], $key, '+');
+                $acc[] = generateNode($key, "New", 'Added', $secondFile[$key]);
                 return $acc;
             }
         }
-        //Файлы
-    }, []);
+    });
     return $difference;
 }
 
-function generateNode($name, $key, $type, $children = [])
+//Функция, генерирующая узел в дереве изменений
+function generateNode($key, $type, $action, $value, $children = [])
 {
-    $value = ["type" => $type, "name" => $name, "children" => $children];
-    $node = [$key => $value];
+    $nodeContent = ["type" => $type, "action" => $action, "value" => normalizeValue($value), "children" => $children];
+    $node = [$key => $nodeContent];
     return $node;
+}
+
+//Функция, нормализующая формат неизмененных директорий
+function normalizeNode($node)
+{
+    $nodeKeys = array_keys($node);
+    sort($nodeKeys);
+    $normalizedNode = array_map(function ($nodeKey) use ($node) {
+            $type = 'Old';
+            $action = 'Unchanged';
+            $value = (!is_array($node[$nodeKey])) ? normalizeValue($node[$nodeKey]) : '';
+            $key = $nodeKey;
+            $children = (!is_array($node[$nodeKey])) ? [] : normalizeNode($node[$nodeKey]);
+            $nodeContent = ["type" => $type, "action" => $action, "value" => $value, "children" => $children];
+            $node = [$key => $nodeContent];
+            return $node;
+    }, $nodeKeys);
+    return $normalizedNode;
+}
+
+function normalizeValue($value)
+{
+    //Костыль, обрабатыващий значения типа bool и null
+    if ($value === true) {
+        $value = 'true';
+    }
+    if ($value === false) {
+        $value = 'false';
+    }
+    if ($value === null) {
+        $value = 'null';
+    }
+    return $value;
 }
