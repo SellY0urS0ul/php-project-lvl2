@@ -13,7 +13,6 @@ function stylishFormatter(array $diff)
 
 function makeStylishFormat(array $diff, int $depth = 1)
 {
-
     $formatedDiff = array_reduce($diff, function ($acc, $element) use ($depth) {
 
         //Получение информации об узле
