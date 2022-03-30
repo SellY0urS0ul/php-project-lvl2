@@ -18,21 +18,16 @@ function makePlainFormat(array $diff, $path = '')
             $value = ($children === []) ? valueFormatter($element[$key]["value"]) : '[complex value]';
             $action = $element[$key]["action"];
 
-
             //Добавление нового элемента
             if ($action === "Added") {
-                return "Property '{$path}{$key}' was added with value: {$value}\n";
-            }
-
-            //Удаление элемента
-            if ($action === "Changed") {
-                return "Property '{$path}{$key}' was removed\n";
-            }
-
-            //Рекурсивная обработка директорий
-            if ($children !== []) {
+                $finalStirng = "Property '{$path}{$key}' was added with value: {$value}\n";
+            } elseif ($action === "Changed") {
+                //Удаление элемента
+                $finalStirng = "Property '{$path}{$key}' was removed\n";
+            } else {
+                //Рекурсивная обработка директорий
                 $path = "{$path}{$key}.";
-                return makePlainFormat($children, $path);
+                $finalStirng = makePlainFormat($children, $path);
             }
         } else {
             //Обновление существующего элемента
@@ -41,8 +36,9 @@ function makePlainFormat(array $diff, $path = '')
             $newChildren = $element['Added'][$key]['children'];
             $newValue = ($newChildren === []) ? valueFormatter($element['Added'][$key]['value']) : '[complex value]';
             $oldValue = ($oldChildren === []) ? valueFormatter($element['Changed'][$key]['value']) : '[complex value]';
-            return "Property '{$path}{$key}' was updated. From {$oldValue} to {$newValue}\n";
+            $finalStirng = "Property '{$path}{$key}' was updated. From {$oldValue} to {$newValue}\n";
         }
+        return $finalStirng;
     }, $diff);
     return implode($formatedDiff);
 }

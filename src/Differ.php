@@ -5,6 +5,7 @@ namespace Differ\Differ;
 use function Php\Project\Lvl2\Parser\parse;
 use function Php\Project\Lvl2\Render\Formatters\render;
 
+//use function Functional\sort;
 // Функция, генерирующая форматированное отличие 2-х файлов
 function genDiff(string $firstPath, string $secondPath, string $format = "stylish"): string
 {
@@ -19,12 +20,11 @@ function findDiff(array $firstFile, array $secondFile): array
 {
     //Список уникальных ключей одного уровня
     $uniqueKeys = array_unique(array_merge(array_keys($firstFile), array_keys($secondFile)));
+    //sort($uniqueKeys, fn ($left, $right) => strcmp($left, $right), true);
     sort($uniqueKeys);
     //Рекурсивное построение дерева отличий в 2-х файлах
-    $acc = [];
     $difference = array_map(function ($key) use ($firstFile, $secondFile) {
 
-        $node = [];
         //Ключ присутствует в обоих файлах
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
             //Ключ - директория
@@ -41,7 +41,6 @@ function findDiff(array $firstFile, array $secondFile): array
                     $node = ["Changed" => $changedItem, "Added" => $addedItem];
                 }
             }
-
 
             //Первый ключ - директория, второй - файл
             if (is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
@@ -87,7 +86,7 @@ function findDiff(array $firstFile, array $secondFile): array
 }
 
 //Функция, генерирующая узел в дереве изменений
-function generateNode(string $key, string $action, $value, array $children = [])
+function generateNode(string $key, string $action, $value, array $children = []): array
 {
     $nodeContent = ["action" => $action, "value" => normalizeValue($value), "children" => $children];
     $node = [$key => $nodeContent];
@@ -98,6 +97,7 @@ function generateNode(string $key, string $action, $value, array $children = [])
 function normalizeNode($node)
 {
     $nodeKeys = array_keys($node);
+    //sort($nodeKeys, fn ($left, $right) => strcmp($left, $right), true);
     sort($nodeKeys);
     $normalizedNode = array_map(function ($nodeKey) use ($node) {
         $action = 'Unchanged';
@@ -117,13 +117,12 @@ function normalizeNode($node)
 function normalizeValue($value)
 {
     if ($value === true) {
-        $value = 'true';
-    }
-    if ($value === false) {
-        $value = 'false';
-    }
-    if ($value === null) {
-        $value = 'null';
-    }
-    return $value;
+        return 'true';
+    } elseif ($value === false) {
+        return 'false';
+    } elseif ($value === null) {
+        return 'null';
+    } else {
+        return $value;
+    };
 }
