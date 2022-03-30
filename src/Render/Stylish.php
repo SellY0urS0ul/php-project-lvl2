@@ -18,21 +18,8 @@ function makeStylishFormat(array $diff, int $depth = 1)
         //Получение информации об узле
         $key = array_key_first($element);
         $value = $element[$key]["value"];
-        $action = $element[$key]["action"];
+        $action = normalizeAction($element[$key]["action"]);
         $children = $element[$key]["children"];
-
-        //Обработка формата
-        switch ($action) {
-            case 'Changed':
-                $action = '-';
-                break;
-            case 'Unchanged':
-                $action = ' ';
-                break;
-            case 'Added':
-                $action = '+';
-                break;
-        }
 
         //Рассчет отступов в зависимости от глубины узла
         $currentTab = str_repeat(' ', ($depth * TAB - SYMBOLS_SPACE));
@@ -50,4 +37,21 @@ function makeStylishFormat(array $diff, int $depth = 1)
         return $acc;
     });
     return $formatedDiff;
+}
+
+function normalizeAction($action)
+{
+    switch ($action) {
+        case 'Changed':
+            $action = '-';
+            break;
+        case 'Unchanged':
+            $action = ' ';
+            break;
+        case 'Added':
+            $action = '+';
+            break;
+    }
+
+    return $action;
 }

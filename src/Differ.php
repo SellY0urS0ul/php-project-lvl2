@@ -107,9 +107,11 @@ function normalizeNode($node)
     return $normalizedNode;
 }
 
+/**
+ * Функция, обрабатывающие значения bool и null
+ **/
 function normalizeValue($value)
 {
-    //Костыль, обрабатыващий значения типа bool и null
     if ($value === true) {
         $value = 'true';
     }

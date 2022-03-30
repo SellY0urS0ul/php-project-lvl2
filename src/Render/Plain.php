@@ -31,14 +31,7 @@ function makePlainFormat(array $diff, $path = '')
 
         //Обновление существующего элемента
         if ($type === "Old" && $action === "Changed") {
-            $newValue = array_reduce($diff, function ($carry, $element) use ($key) {
-                $newKey = array_key_first($element);
-                if ($newKey === $key && $element[$newKey]['action'] === 'Added') {
-                    $newValue = valueFormatter($element[$newKey]['value']);
-                    $carry = ($element[$newKey]['children'] !== []) ? '[complex value]' : $newValue;
-                }
-                return $carry;
-            });
+            $newValue = findNewValue($diff, $key);
             $acc = $acc . "Property '{$path}{$key}' was updated. From {$value} to {$newValue}\n";
         }
 
@@ -58,4 +51,16 @@ function valueFormatter($value)
         $value = "'{$value}'";
     }
     return $value;
+}
+
+function findNewValue($diff, $key)
+{
+    return array_reduce($diff, function ($carry, $element) use ($key) {
+        $newKey = array_key_first($element);
+        if ($newKey === $key && $element[$newKey]['action'] === 'Added') {
+            $newValue = valueFormatter($element[$newKey]['value']);
+            $carry = ($element[$newKey]['children'] !== []) ? '[complex value]' : $newValue;
+        }
+        return $carry;
+    });
 }
