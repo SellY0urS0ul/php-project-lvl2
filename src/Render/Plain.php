@@ -8,9 +8,9 @@ function plainFormatter(array $diff)
     return trim($formattedString);
 }
 
-function makePlainFormat(array $diff, $path = '')
+function makePlainFormat(array $diff, string $path = '')
 {
-    $formatedDiff = array_map(function ($element) use ($path, $diff) {
+    $formatedDiff = array_map(function ($element) use ($path) {
         if (!array_key_exists("Changed", $element)) {
             //Получение информации об узле
             $key = array_key_first($element);
@@ -26,8 +26,8 @@ function makePlainFormat(array $diff, $path = '')
                 $finalStirng = "Property '{$path}{$key}' was removed\n";
             } else {
                 //Рекурсивная обработка директорий
-                $path = "{$path}{$key}.";
-                $finalStirng = makePlainFormat($children, $path);
+                $finalPath = "{$path}{$key}.";
+                $finalStirng = makePlainFormat($children, $finalPath);
             }
         } else {
             //Обновление существующего элемента
