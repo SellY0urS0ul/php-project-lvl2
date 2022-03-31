@@ -2,6 +2,8 @@
 
 namespace Php\Project\Lvl2\Render\Stylish;
 
+use Exception;
+
 const TAB = 4;
 const SYMBOLS_SPACE = 2;
 
@@ -26,14 +28,16 @@ function makeStylishFormat(array $diff, int $depth = 1)
             $currentTab = str_repeat(' ', ($depth * TAB - SYMBOLS_SPACE));
 
             //Рекурсивная обработка директорий
-            $temp = '';
+
             if ($children !== []) {
-                $temp = makeStylishFormat($children, $depth + 1);
-                $temp = "{\n{$temp}{$currentTab}  }";
+                $childrenData = makeStylishFormat($children, $depth + 1);
+                $childrens = "{\n{$childrenData}{$currentTab} }";
+            } else {
+                $childrens = '';
             }
 
             //Формирование финальной строки
-            return "{$currentTab}{$action} {$key}: {$value}{$temp}\n";
+            return "{$currentTab}{$action} {$key}: {$value}{$childrens}\n";
         } else {
             $temp2 = makeStylishFormat($element, $depth);
             return $temp2;
@@ -43,19 +47,20 @@ function makeStylishFormat(array $diff, int $depth = 1)
     var_dump($formatedDiff);
 }
 
-function normalizeAction($action)
+function normalizeAction(string $action): string
 {
     switch ($action) {
         case 'Changed':
-            $action = '-';
+            $normalizedAction = '-';
             break;
         case 'Unchanged':
-            $action = ' ';
+            $normalizedAction = ' ';
             break;
         case 'Added':
-            $action = '+';
+            $normalizedAction = '+';
             break;
+        default:
+            throw new Exception('Undefined action');
     }
-
-    return $action;
+    return $normalizedAction;
 }
