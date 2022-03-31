@@ -43,10 +43,10 @@ function makePlainFormat(array $diff, string $path = '')
     return implode($formatedDiff);
 }
 
-function valueFormatter($value)
+function valueFormatter(mixed $value)
 {
     if ($value !== 'false' && $value !== 'true' && $value !== 'null' && !is_numeric($value)) {
-        $value = "'{$value}'";
+        $finalValue = "'{$value}'";
     }
-    return $value;
+    return $finalValue;
 }
