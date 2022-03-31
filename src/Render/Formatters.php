@@ -2,6 +2,8 @@
 
 namespace Php\Project\Lvl2\Render\Formatters;
 
+use Exception;
+
 use function Php\Project\Lvl2\Render\Stylish\stylishFormatter;
 use function Php\Project\Lvl2\Render\Plain\plainFormatter;
 use function Php\Project\Lvl2\Render\Json\jsonFormatter;
@@ -21,7 +23,7 @@ function render(array $diff, string $format)
             $finalFormat = jsonFormatter($diff);
             break;
         default:
-            $finalFormat = 'string';
+            throw new Exception('Test');
     }
     return $finalFormat;
 }
