@@ -12,15 +12,14 @@ function render(array $diff, string $format)
 {
     switch ($format) {
         case 'stylish':
-            return stylishFormatter($diff);
+            $finalFormat = stylishFormatter($diff);
             break;
         case 'plain':
-            return plainFormatter($diff);
+            $finalFormat = plainFormatter($diff);
             break;
         case 'json':
-            return jsonFormatter($diff);
+            $finalFormat = jsonFormatter($diff);
             break;
-        default:
-            echo 'Error!';
     }
+    return $finalFormat;
 }
