@@ -20,6 +20,8 @@ function render(array $diff, string $format)
         case 'json':
             $finalFormat = jsonFormatter($diff);
             break;
+        default:
+            $finalFormat = 'string';
     }
     return $finalFormat;
 }
