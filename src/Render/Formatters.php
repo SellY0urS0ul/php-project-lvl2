@@ -8,7 +8,7 @@ use function Php\Project\Lvl2\Render\Json\jsonFormatter;
 
 //Функция, форматирующая полученные значения
 
-function render($diff, $format)
+function render(array $diff, string $format)
 {
     switch ($format) {
         case 'stylish':
