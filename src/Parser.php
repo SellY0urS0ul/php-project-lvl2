@@ -9,7 +9,7 @@ use Symfony\Component\Yaml\Yaml;
 function parse(string $path): array
 {
     if (substr($path, -4) === "json") {
-        $fileContent = json_decode(file_get_contents($path), true);
+        $fileContent = json_decode(file_get_contents($path), FILE_USE_INCLUDE_PATH);
         return $fileContent;
     } else {
         $fileContent = Yaml::parseFile($path);
