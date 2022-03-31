@@ -21,6 +21,6 @@ function render(array $diff, string $format)
             return jsonFormatter($diff);
             break;
         default:
-            throw new Error('Error!');
+            echo 'Error!';
     }
 }
