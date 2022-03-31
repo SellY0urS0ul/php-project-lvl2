@@ -23,7 +23,7 @@ function render(array $diff, string $format)
             $finalFormat = jsonFormatter($diff);
             break;
         default:
-            throw new Exception('Test');
+            throw new Exception('Нет такого формата');
     }
     return $finalFormat;
 }
