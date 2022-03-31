@@ -86,7 +86,7 @@ function findDiff(array $firstFile, array $secondFile): array
 }
 
 //Функция, генерирующая узел в дереве изменений
-function generateNode(string $key, string $action, $value, array $children = []): array
+function generateNode(string $key, string $action, mixed $value, array $children = []): array
 {
     $nodeContent = ["action" => $action, "value" => normalizeValue($value), "children" => $children];
     $node = [$key => $nodeContent];

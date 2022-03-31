@@ -8,4 +8,4 @@ lint:
 test:
 	vendor/bin/phpunit tests
 run:
-	./bin/gendiff --format plain tests/fixtures/file1.yaml tests/fixtures/file2.yaml
+	./bin/gendiff --format stylish tests/fixtures/file1.yaml tests/fixtures/file2.yaml
