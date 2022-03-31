@@ -66,10 +66,7 @@ function findDiff(array $firstFile, array $secondFile): array
             if (!is_array($firstFile[$key])) {
                 $node = generateNode($key, 'Changed', $firstFile[$key]);
             }
-        }
-
-        //Ключ присутствует только во 2-м файле
-        if (array_key_exists($key, $secondFile) && !array_key_exists($key, $firstFile)) {
+        } elseif (array_key_exists($key, $secondFile) && !array_key_exists($key, $firstFile)) {
             //Ключ - директория
             if (is_array($secondFile[$key])) {
                 $node = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
