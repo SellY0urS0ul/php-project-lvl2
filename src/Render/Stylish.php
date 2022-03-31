@@ -43,7 +43,6 @@ function makeStylishFormat(array $diff, int $depth = 1)
         }
     }, $diff);
     return implode($formatedDiff);
-    var_dump($formatedDiff);
 }
 
 function normalizeAction(string $action): string
