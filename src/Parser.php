@@ -10,8 +10,9 @@ function parse(mixed $path): array
 {
     if (substr($path, -4) === "json") {
         $fileContent = json_decode(file_get_contents($path), true);
-    } else (substr($path, -4) === "yaml" || substr($path, -3) === "yml") {
+        return $fileContent;
+    } else {
         $fileContent = Yaml::parseFile($path);
+        return $fileContent;
     }
-    return $fileContent;
 }
