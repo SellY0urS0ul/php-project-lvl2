@@ -13,11 +13,19 @@ function parse(string $path): array
         throw new Exception("Invalid file path: {$path}");
     }
 
-    if (substr($path, -4) === "json") {
-        $fileContent = json_decode(file_get_contents($path), true);
-        return $fileContent;
-    } else {
-        $fileContent = Yaml::parseFile($path);
-        return $fileContent;
+    $fileContent = file_get_contents($path);
+    $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+    if ($fileContent === false) {
+        throw new \Exception("Can't read file: {$path}");
+    }
+
+    switch ($extension) {
+        case "json":
+            return json_decode($fileContent, true, 512, JSON_THROW_ON_ERROR);
+        case "yaml":
+            return Yaml::parse($fileContent);
+        default:
+            throw new Exception("Format {$extension} not supported.");
     }
 }
