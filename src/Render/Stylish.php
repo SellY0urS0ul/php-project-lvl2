@@ -28,10 +28,9 @@ function makeStylishFormat(array $diff, int $depth = 1)
             $currentTab = str_repeat(' ', ($depth * TAB - SYMBOLS_SPACE));
 
             //Рекурсивная обработка директорий
-
             if ($children !== []) {
                 $childrenData = makeStylishFormat($children, $depth + 1);
-                $childrens = "{\n{$childrenData}{$currentTab} }";
+                $childrens = "{\n{$childrenData}{$currentTab}  }";
             } else {
                 $childrens = '';
             }
@@ -62,5 +61,6 @@ function normalizeAction(string $action): string
         default:
             throw new Exception('Undefined action');
     }
+
     return $normalizedAction;
 }

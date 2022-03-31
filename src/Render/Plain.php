@@ -26,8 +26,8 @@ function makePlainFormat(array $diff, string $path = '')
                 $finalStirng = "Property '{$path}{$key}' was removed\n";
             } else {
                 //Рекурсивная обработка директорий
-                $finalPath = "{$path}{$key}.";
-                $finalStirng = makePlainFormat($children, $finalPath);
+                $path = "{$path}{$key}.";
+                $finalStirng = makePlainFormat($children, $path);
             }
         } else {
             //Обновление существующего элемента
