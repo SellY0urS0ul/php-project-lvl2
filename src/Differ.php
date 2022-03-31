@@ -4,8 +4,8 @@ namespace Differ\Differ;
 
 use function Php\Project\Lvl2\Parser\parse;
 use function Php\Project\Lvl2\Render\Formatters\render;
-
 use function Functional\sort;
+
 // Функция, генерирующая форматированное отличие 2-х файлов
 function genDiff(string $firstPath, string $secondPath, string $format = "stylish"): string
 {
