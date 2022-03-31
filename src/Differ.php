@@ -54,10 +54,7 @@ function findDiff(array $firstFile, array $secondFile): array
                 $addedItem = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
                 $node = ["Changed" => $changedItem, "Added" => $addedItem];
             }
-        }
-
-        //Ключ присутствует только в 1-м файле
-        if (array_key_exists($key, $firstFile) && !array_key_exists($key, $secondFile)) {
+        } elseif (array_key_exists($key, $firstFile) && !array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key])) {
                 $node = generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
@@ -75,6 +72,8 @@ function findDiff(array $firstFile, array $secondFile): array
             if (!is_array($secondFile[$key])) {
                 $node = generateNode($key, 'Added', $secondFile[$key]);
             }
+        } else {
+            $node = 'test';
         }
         return $node;
     }, $sortedUniqueKeys);
