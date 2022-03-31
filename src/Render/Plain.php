@@ -46,7 +46,7 @@ function makePlainFormat(array $diff, string $path = '')
 function valueFormatter(mixed $value)
 {
     if ($value !== 'false' && $value !== 'true' && $value !== 'null' && !is_numeric($value)) {
-        $finalValue = "'{$value}'";
+        $value = "'{$value}'";
     }
-    return $finalValue;
+    return $value;
 }
