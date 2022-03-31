@@ -20,5 +20,7 @@ function render(array $diff, string $format)
         case 'json':
             return jsonFormatter($diff);
             break;
+        default:
+            throw new Error('Error!');
     }
 }
