@@ -14,7 +14,7 @@ The Difference Calculator is a console solution for finding differences between 
 ## Setup
 
 ```sh
-git clone https://github.com/MaksHaks/php-project-lvl2.git
+git clone https://github.com/SellY0urS0ul/php-project-lvl2.git
 make install
 ```
 
