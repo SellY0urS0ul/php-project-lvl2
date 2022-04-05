@@ -7,7 +7,7 @@
                 {
                     "follow": {
                         "action": "Added",
-                        "value": "false",
+                        "value": false,
                         "children": []
                     }
                 },
@@ -29,14 +29,14 @@
                     "Changed": {
                         "setting3": {
                             "action": "Changed",
-                            "value": "true",
+                            "value": true,
                             "children": []
                         }
                     },
                     "Added": {
                         "setting3": {
                             "action": "Added",
-                            "value": "null",
+                            "value": null,
                             "children": []
                         }
                     }

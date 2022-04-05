@@ -45,10 +45,25 @@ function makePlainFormat(array $diff, string $path = '')
 
 function formattingValue(mixed $value)
 {
-    if ($value !== 'false' && $value !== 'true' && $value !== 'null' && !is_numeric($value)) {
-        $finalValue = "'{$value}'";
+    $normalValue = normalizeValue($value);
+    if ($normalValue !== 'false' && $normalValue !== 'true' && $normalValue !== 'null' && !is_numeric($normalValue)) {
+        $finalValue = "'{$normalValue}'";
     } else {
-        $finalValue = $value;
+        $finalValue = $normalValue;
     }
     return $finalValue;
+}
+
+//Функция, обрабатывающие значения bool и null
+function normalizeValue(mixed $value)
+{
+    if ($value === true) {
+        return 'true';
+    } elseif ($value === false) {
+        return 'false';
+    } elseif ($value === null) {
+        return 'null';
+    } else {
+        return $value;
+    };
 }

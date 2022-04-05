@@ -20,7 +20,7 @@ function makeStylishFormat(array $diff, int $depth = 1)
         if (!array_key_exists("Changed", $element)) {
             //Получение информации об узле
             $key = array_key_first($element);
-            $value = $element[$key]["value"];
+            $value = normalizeValue($element[$key]["value"]);
             $action = normalizeAction($element[$key]["action"]);
             $children = $element[$key]["children"];
 
@@ -62,4 +62,18 @@ function normalizeAction(string $action): string
     }
 
     return $normalizedAction;
+}
+
+//Функция, обрабатывающие значения bool и null
+function normalizeValue(mixed $value)
+{
+    if ($value === true) {
+        return 'true';
+    } elseif ($value === false) {
+        return 'false';
+    } elseif ($value === null) {
+        return 'null';
+    } else {
+        return $value;
+    };
 }

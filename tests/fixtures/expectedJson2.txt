@@ -3,7 +3,7 @@
         "Changed": {
             "test1": {
                 "action": "Changed",
-                "value": "true",
+                "value": true,
                 "children": []
             }
         },
@@ -19,7 +19,7 @@
         "Changed": {
             "test2": {
                 "action": "Changed",
-                "value": "null",
+                "value": null,
                 "children": []
             }
         },

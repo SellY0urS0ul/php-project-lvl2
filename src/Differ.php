@@ -81,18 +81,18 @@ function makeDiff(array $firstFile, array $secondFile): array
 //Функция, генерирующая узел в дереве изменений
 function generateNode(string $key, string $action, mixed $value, array $children = []): array
 {
-    $nodeContent = ["action" => $action, "value" => normalizeValue($value), "children" => $children];
+    $nodeContent = ["action" => $action, "value" => $value, "children" => $children];
     $node = [$key => $nodeContent];
     return $node;
 }
 
 //Функция, нормализующая формат неизмененных директорий
-function normalizeNode(array $node)
+function normalizeNode(mixed $node)
 {
     $nodeKeys = sort(array_keys($node), fn (string $left, string $right) => strcmp($left, $right));
     $finalNode = array_map(function ($nodeKey) use ($node) {
         $action = 'Unchanged';
-        $value = (!is_array($node[$nodeKey])) ? normalizeValue($node[$nodeKey]) : '';
+        $value = (!is_array($node[$nodeKey])) ? $node[$nodeKey] : '';
         $key = $nodeKey;
         $children = (!is_array($node[$nodeKey])) ? [] : normalizeNode($node[$nodeKey]);
         $nodeContent = ["action" => $action, "value" => $value, "children" => $children];
@@ -100,18 +100,4 @@ function normalizeNode(array $node)
         return $normalizedNode;
     }, $nodeKeys);
     return $finalNode;
-}
-
-//Функция, обрабатывающие значения bool и null
-function normalizeValue(mixed $value)
-{
-    if ($value === true) {
-        return 'true';
-    } elseif ($value === false) {
-        return 'false';
-    } elseif ($value === null) {
-        return 'null';
-    } else {
-        return $value;
-    };
 }
