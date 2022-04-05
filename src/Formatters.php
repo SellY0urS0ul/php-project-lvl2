@@ -1,6 +1,6 @@
 <?php
 
-namespace Php\Project\Lvl2\Render\Formatters;
+namespace Php\Project\Lvl2\Formatters;
 
 use Exception;
 

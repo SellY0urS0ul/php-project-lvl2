@@ -2,7 +2,7 @@
 
 <?php
 
-use function Differ\Differ\genDiff;
+use function Differ\Differ\makeDiff;
 
 $autoloadPath1 = __DIR__ . '/../../../autoload.php';
 $autoloadPath2 = __DIR__ . '/../vendor/autoload.php';
@@ -17,10 +17,12 @@ if (file_exists($autoloadPath1)) {
 
 $doc = <<<DOC
 Generate Difference
+
 Usage:
   gendiff (-h|--help)
   gendiff (-v|--version)
   gendiff [--format <fmt>] <firstFile> <secondFile>
+
 Options:
   -h --help     Show this screen
   -v --version  Show version
@@ -35,4 +37,4 @@ $firstPath = $args['<firstFile>'];
 $secondPath = $args['<secondFile>'];
 $format = $args['--format'];
 
-echo (genDiff($firstPath, $secondPath, $format));
+echo (makeDiff($firstPath, $secondPath, $format));

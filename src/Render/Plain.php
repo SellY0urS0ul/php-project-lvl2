@@ -15,7 +15,7 @@ function makePlainFormat(array $diff, string $path = '')
             //Получение информации об узле
             $key = array_key_first($element);
             $children = $element[$key]["children"];
-            $value = ($children === []) ? valueFormatter($element[$key]["value"]) : '[complex value]';
+            $value = ($children === []) ? formattingValue($element[$key]["value"]) : '[complex value]';
             $action = $element[$key]["action"];
 
             //Добавление нового элемента
@@ -34,8 +34,8 @@ function makePlainFormat(array $diff, string $path = '')
             $key = array_key_first($element['Changed']);
             $oldChildren = $element['Changed'][$key]['children'];
             $newChildren = $element['Added'][$key]['children'];
-            $newValue = ($newChildren === []) ? valueFormatter($element['Added'][$key]['value']) : '[complex value]';
-            $oldValue = ($oldChildren === []) ? valueFormatter($element['Changed'][$key]['value']) : '[complex value]';
+            $newValue = ($newChildren === []) ? formattingValue($element['Added'][$key]['value']) : '[complex value]';
+            $oldValue = ($oldChildren === []) ? formattingValue($element['Changed'][$key]['value']) : '[complex value]';
             $finalStirng = "Property '{$path}{$key}' was updated. From {$oldValue} to {$newValue}\n";
         }
         return $finalStirng;
@@ -43,7 +43,7 @@ function makePlainFormat(array $diff, string $path = '')
     return implode($formatedDiff);
 }
 
-function valueFormatter(mixed $value)
+function formattingValue(mixed $value)
 {
     if ($value !== 'false' && $value !== 'true' && $value !== 'null' && !is_numeric($value)) {
         $finalValue = "'{$value}'";

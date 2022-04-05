@@ -1,0 +1,238 @@
+[
+    {
+        "common": {
+            "action": "Unchanged",
+            "value": "",
+            "children": [
+                {
+                    "follow": {
+                        "action": "Added",
+                        "value": "false",
+                        "children": []
+                    }
+                },
+                {
+                    "setting1": {
+                        "action": "Unchanged",
+                        "value": "Value 1",
+                        "children": []
+                    }
+                },
+                {
+                    "setting2": {
+                        "action": "Changed",
+                        "value": 200,
+                        "children": []
+                    }
+                },
+                {
+                    "Changed": {
+                        "setting3": {
+                            "action": "Changed",
+                            "value": "true",
+                            "children": []
+                        }
+                    },
+                    "Added": {
+                        "setting3": {
+                            "action": "Added",
+                            "value": "null",
+                            "children": []
+                        }
+                    }
+                },
+                {
+                    "setting4": {
+                        "action": "Added",
+                        "value": "blah blah",
+                        "children": []
+                    }
+                },
+                {
+                    "setting5": {
+                        "action": "Added",
+                        "value": "",
+                        "children": [
+                            {
+                                "key5": {
+                                    "action": "Unchanged",
+                                    "value": "value5",
+                                    "children": []
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "setting6": {
+                        "action": "Unchanged",
+                        "value": "",
+                        "children": [
+                            {
+                                "doge": {
+                                    "action": "Unchanged",
+                                    "value": "",
+                                    "children": [
+                                        {
+                                            "Changed": {
+                                                "wow": {
+                                                    "action": "Changed",
+                                                    "value": "",
+                                                    "children": []
+                                                }
+                                            },
+                                            "Added": {
+                                                "wow": {
+                                                    "action": "Added",
+                                                    "value": "so much",
+                                                    "children": []
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "key": {
+                                    "action": "Unchanged",
+                                    "value": "value",
+                                    "children": []
+                                }
+                            },
+                            {
+                                "ops": {
+                                    "action": "Added",
+                                    "value": "vops",
+                                    "children": []
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "group1": {
+            "action": "Unchanged",
+            "value": "",
+            "children": [
+                {
+                    "Changed": {
+                        "baz": {
+                            "action": "Changed",
+                            "value": "bas",
+                            "children": []
+                        }
+                    },
+                    "Added": {
+                        "baz": {
+                            "action": "Added",
+                            "value": "bars",
+                            "children": []
+                        }
+                    }
+                },
+                {
+                    "foo": {
+                        "action": "Unchanged",
+                        "value": "bar",
+                        "children": []
+                    }
+                },
+                {
+                    "Changed": {
+                        "nest": {
+                            "action": "Changed",
+                            "value": "",
+                            "children": [
+                                {
+                                    "key": {
+                                        "action": "Unchanged",
+                                        "value": "value",
+                                        "children": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "Added": {
+                        "nest": {
+                            "action": "Added",
+                            "value": "str",
+                            "children": []
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "group2": {
+            "action": "Changed",
+            "value": "",
+            "children": [
+                {
+                    "abc": {
+                        "action": "Unchanged",
+                        "value": 12345,
+                        "children": []
+                    }
+                },
+                {
+                    "deep": {
+                        "action": "Unchanged",
+                        "value": "",
+                        "children": [
+                            {
+                                "id": {
+                                    "action": "Unchanged",
+                                    "value": 45,
+                                    "children": []
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    {
+        "group3": {
+            "action": "Added",
+            "value": "",
+            "children": [
+                {
+                    "deep": {
+                        "action": "Unchanged",
+                        "value": "",
+                        "children": [
+                            {
+                                "id": {
+                                    "action": "Unchanged",
+                                    "value": "",
+                                    "children": [
+                                        {
+                                            "number": {
+                                                "action": "Unchanged",
+                                                "value": 45,
+                                                "children": []
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "fee": {
+                        "action": "Unchanged",
+                        "value": 100500,
+                        "children": []
+                    }
+                }
+            ]
+        }
+    }
+]
