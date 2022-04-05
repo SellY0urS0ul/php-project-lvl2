@@ -7,16 +7,16 @@ use function Php\Project\Lvl2\Formatters\render;
 use function Functional\sort;
 
 // Функция, генерирующая форматированное отличие 2-х файлов
-function makeDiff(string $firstPath, string $secondPath, string $format = "stylish"): string
+function genDiff(string $firstPath, string $secondPath, string $format = "stylish"): string
 {
     $firstFileContent = parse($firstPath);
     $secondFileContent = parse($secondPath);
-    $diff = findDiff($firstFileContent, $secondFileContent);
+    $diff = makeDiff($firstFileContent, $secondFileContent);
     return render($diff, $format);
 }
 
 // Функция, осуществляющая поиск отличий между 2-я файлами
-function findDiff(array $firstFile, array $secondFile): array
+function makeDiff(array $firstFile, array $secondFile): array
 {
     //Список уникальных ключей одного уровня
     $uniqueKeys = array_unique(array_merge(array_keys($firstFile), array_keys($secondFile)));
@@ -30,7 +30,7 @@ function findDiff(array $firstFile, array $secondFile): array
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                $node = generateNode($key, 'Unchanged', '', findDiff($firstFile[$key], $secondFile[$key]));
+                $node = generateNode($key, 'Unchanged', '', makeDiff($firstFile[$key], $secondFile[$key]));
             } elseif (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 //Ключ -  файл
                 if ($firstFile[$key] === $secondFile[$key]) {
