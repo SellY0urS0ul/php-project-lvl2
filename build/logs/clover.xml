@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1649158012">
-  <project timestamp="1649158012">
+<coverage generated="1649158170">
+  <project timestamp="1649158170">
     <file name="/home/sell-your-soul/php-project-lvl2/src/Differ.php">
       <line num="12" type="stmt" count="1"/>
       <line num="13" type="stmt" count="1"/>
