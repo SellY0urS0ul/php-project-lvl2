@@ -30,49 +30,46 @@ function makeDiff(array $firstFile, array $secondFile): array
         if (array_key_exists($key, $firstFile) && array_key_exists($key, $secondFile)) {
             //Ключ - директория
             if (is_array($firstFile[$key]) && is_array($secondFile[$key])) {
-                $node = generateNode($key, 'Unchanged', '', makeDiff($firstFile[$key], $secondFile[$key]));
+                return generateNode($key, 'Unchanged', '', makeDiff($firstFile[$key], $secondFile[$key]));
             } elseif (!is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 //Ключ -  файл
                 if ($firstFile[$key] === $secondFile[$key]) {
-                    $node = generateNode($key, 'Unchanged', $firstFile[$key]);
+                    return generateNode($key, 'Unchanged', $firstFile[$key]);
                 } else {
                     $changedItem = generateNode($key, 'Changed', $firstFile[$key]);
                     $addedItem = generateNode($key, 'Added', $secondFile[$key]);
-                    $node = ["Changed" => $changedItem, "Added" => $addedItem];
+                    return ["Changed" => $changedItem, "Added" => $addedItem];
                 }
             } elseif (is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 //Первый ключ - директория, второй - файл
                 $changedItem =  generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
                 $addedItem = generateNode($key, 'Added', $secondFile[$key]);
-                $node = ["Changed" => $changedItem, "Added" => $addedItem];
+                return ["Changed" => $changedItem, "Added" => $addedItem];
             } else {
                 //Первый ключ - файл, второй - директория
                 $changedItem =  generateNode($key, 'Changed', $firstFile[$key]);
                 $addedItem = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
-                $node = ["Changed" => $changedItem, "Added" => $addedItem];
+                return ["Changed" => $changedItem, "Added" => $addedItem];
             }
         } elseif (array_key_exists($key, $firstFile)) {
 //Ключ присутствует только в 1-м файле
 
             //Ключ - директория
             if (is_array($firstFile[$key])) {
-                $node = generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
-            } else {
-                //Ключ -  файл
-                $node = generateNode($key, 'Changed', $firstFile[$key]);
+                return generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
             }
+                //Ключ -  файл
+                return generateNode($key, 'Changed', $firstFile[$key]);
         } else {
             //Ключ присутствует только во 2-м файле
 
             //Ключ - директория
             if (is_array($secondFile[$key])) {
-                $node = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
-            } else {
-                //Ключ -  файл
-                $node = generateNode($key, 'Added', $secondFile[$key]);
+                return generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
             }
+                //Ключ -  файл
+                return generateNode($key, 'Added', $secondFile[$key]);
         }
-        return $node;
     }, $sortedUniqueKeys);
 
     return $difference;
