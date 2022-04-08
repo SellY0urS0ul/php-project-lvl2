@@ -15,13 +15,10 @@ function render(array $diff, string $format)
     switch ($format) {
         case 'stylish':
             return renderStylish($diff);
-            break;
         case 'plain':
             return renderPlain($diff);
-            break;
         case 'json':
             return renderJson($diff);
-            break;
         default:
             throw new Exception('Нет такого формата');
     }
