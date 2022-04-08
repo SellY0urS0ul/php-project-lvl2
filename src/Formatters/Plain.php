@@ -2,7 +2,7 @@
 
 namespace Php\Project\Lvl2\Render\Plain;
 
-function plainFormatter(array $diff)
+function renderPlain(array $diff)
 {
     $formattedString = makePlainFormat($diff);
     return trim($formattedString);
@@ -47,11 +47,9 @@ function formattingValue(mixed $value)
 {
     $normalValue = normalizeValue($value);
     if ($normalValue !== 'false' && $normalValue !== 'true' && $normalValue !== 'null' && !is_numeric($normalValue)) {
-        $finalValue = "'{$normalValue}'";
-    } else {
-        $finalValue = $normalValue;
+        return "'{$normalValue}'";
     }
-    return $finalValue;
+    return $normalValue;
 }
 
 //Функция, обрабатывающие значения bool и null

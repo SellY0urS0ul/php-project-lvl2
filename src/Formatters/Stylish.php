@@ -7,7 +7,7 @@ use Exception;
 const TAB = 4;
 const SYMBOLS_SPACE = 2;
 
-function stylishFormatter(array $diff)
+function renderStylish(array $diff)
 {
     $formatedDiff = makeStylishFormat($diff);
     return "{\n{$formatedDiff}}";
