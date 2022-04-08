@@ -35,22 +35,20 @@ function makeDiff(array $firstFile, array $secondFile): array
                 //Ключ -  файл
                 if ($firstFile[$key] === $secondFile[$key]) {
                     return generateNode($key, 'Unchanged', $firstFile[$key]);
-                } else {
+                }
                     $changedItem = generateNode($key, 'Changed', $firstFile[$key]);
                     $addedItem = generateNode($key, 'Added', $secondFile[$key]);
                     return ["Changed" => $changedItem, "Added" => $addedItem];
-                }
             } elseif (is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 //Первый ключ - директория, второй - файл
                 $changedItem =  generateNode($key, 'Changed', '', normalizeNode($firstFile[$key]));
                 $addedItem = generateNode($key, 'Added', $secondFile[$key]);
                 return ["Changed" => $changedItem, "Added" => $addedItem];
-            } else {
+            }
                 //Первый ключ - файл, второй - директория
                 $changedItem =  generateNode($key, 'Changed', $firstFile[$key]);
                 $addedItem = generateNode($key, 'Added', '', normalizeNode($secondFile[$key]));
                 return ["Changed" => $changedItem, "Added" => $addedItem];
-            }
         } elseif (array_key_exists($key, $firstFile)) {
 //Ключ присутствует только в 1-м файле
 
