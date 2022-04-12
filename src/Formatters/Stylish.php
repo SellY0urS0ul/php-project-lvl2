@@ -20,7 +20,7 @@ function makeStylishFormat(array $diff, int $depth = 1)
         if (!array_key_exists("Changed", $element)) {
             //Получение информации об узле
             $key = array_key_first($element);
-            $value = normalizeValue($element[$key]["value"]);
+            $value = stringifyValue($element[$key]["value"]);
             $action = normalizeAction($element[$key]["action"]);
             $children = $element[$key]["children"];
 
@@ -65,7 +65,7 @@ function normalizeAction(string $action): string
 }
 
 //Функция, обрабатывающие значения bool и null
-function normalizeValue(mixed $value)
+function stringifyValue(mixed $value)
 {
     if ($value === true) {
         return 'true';

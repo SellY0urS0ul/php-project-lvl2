@@ -45,7 +45,7 @@ function makePlainFormat(array $diff, string $path = '')
 
 function formattingValue(mixed $value)
 {
-    $normalValue = normalizeValue($value);
+    $normalValue = stringifyValue($value);
     if ($normalValue !== 'false' && $normalValue !== 'true' && $normalValue !== 'null' && !is_numeric($normalValue)) {
         return "'{$normalValue}'";
     }
@@ -53,7 +53,7 @@ function formattingValue(mixed $value)
 }
 
 //Функция, обрабатывающие значения bool и null
-function normalizeValue(mixed $value)
+function stringifyValue(mixed $value)
 {
     if ($value === true) {
         return 'true';
