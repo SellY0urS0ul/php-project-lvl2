@@ -37,11 +37,9 @@ function makeDiff(array $firstFile, array $secondFile): array
                 if ($firstFile[$key] === $secondFile[$key]) {
                     return generateNode($key, 'Unchanged', $firstFile[$key]);
                 }
-                if ($firstFile[$key] !== $secondFile[$key]) {
                     $changedItem = generateNode($key, 'Changed', $firstFile[$key]);
                     $addedItem = generateNode($key, 'Added', $secondFile[$key]);
                     return ["Changed" => $changedItem, "Added" => $addedItem];
-                }
             }
             if (is_array($firstFile[$key]) && !is_array($secondFile[$key])) {
                 //Первый ключ - директория, второй - файл
